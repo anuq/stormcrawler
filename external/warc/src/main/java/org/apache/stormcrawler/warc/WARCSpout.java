@@ -17,6 +17,8 @@
 package org.apache.stormcrawler.warc;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -145,9 +147,9 @@ public class WARCSpout extends FileSpout {
         }
     }
 
-    private ReadableByteChannel openChannel(String path) throws IOException {
+    private ReadableByteChannel openChannel(String path) throws IOException, URISyntaxException {
         if (path.matches("^https?://.*")) {
-            URL warcUrl = new URL(path);
+            URL warcUrl = new URI(path).toURL();
             return Channels.newChannel(warcUrl.openStream());
         }
         org.apache.hadoop.fs.Path hdfsPath = new org.apache.hadoop.fs.Path(path);

@@ -20,6 +20,8 @@ package org.apache.stormcrawler.filtering.robots;
 import com.fasterxml.jackson.databind.JsonNode;
 import crawlercommons.robots.BaseRobotRules;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import org.apache.storm.Config;
@@ -61,8 +63,8 @@ public class RobotsFilter extends URLFilter {
             @NotNull String urlToFilter) {
         URL target;
         try {
-            target = new URL(urlToFilter);
-        } catch (MalformedURLException e) {
+            target = new URI(urlToFilter).toURL();
+        } catch (MalformedURLException | URISyntaxException e) {
             return null;
         }
 

@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -45,13 +47,13 @@ public class FileResponse {
     private int statusCode;
     private final Metadata metadata;
 
-    public FileResponse(String u, Metadata md, FileProtocol fileProtocol) throws IOException {
+    public FileResponse(String u, Metadata md, FileProtocol fileProtocol) throws IOException, URISyntaxException {
 
         metadata = new Metadata();
         content = new byte[0];
         statusCode = HttpStatus.SC_INTERNAL_SERVER_ERROR;
 
-        URL url = new URL(u);
+        URL url = new URI(u).toURL();
 
         if (!url.getPath().equals(url.getFile())) {
             LOG.warn("url.getPath() != url.getFile(): {}.", url);

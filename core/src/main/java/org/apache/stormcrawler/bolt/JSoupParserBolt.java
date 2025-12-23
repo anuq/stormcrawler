@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -293,7 +295,7 @@ public class JSoupParserBolt extends StatusEmitterBolt {
             } else {
                 final Elements links = jsoupDoc.select("a[href]");
                 slinks = new HashMap<>(links.size());
-                final URL baseUrl = new URL(url);
+                final URL baseUrl = new URI(url).toURL();
                 for (Element link : links) {
                     // nofollow
                     String[] relkeywords = link.attr("rel").split(" ");
@@ -375,7 +377,7 @@ public class JSoupParserBolt extends StatusEmitterBolt {
 
                     // https://github.com/apache/stormcrawler/issues/954
                     if (allowRedirs() && StringUtils.isNotBlank(redirection)) {
-                        emitOutlink(tuple, new URL(url), redirection, metadata);
+                        emitOutlink(tuple, new URI(url).toURL(), redirection, metadata);
                     }
 
                     // Mark URL as redirected
@@ -387,8 +389,8 @@ public class JSoupParserBolt extends StatusEmitterBolt {
                     eventCounter.scope("tuple_success").incr();
                     return;
                 }
-            } catch (MalformedURLException e) {
-                LOG.error("MalformedURLException on {}", url);
+            } catch (MalformedURLException | URISyntaxException e) {
+                LOG.error("Exception on {}", url, e);
             }
         }
 
@@ -516,11 +518,11 @@ public class JSoupParserBolt extends StatusEmitterBolt {
 
         URL sourceUrl;
         try {
-            sourceUrl = new URL(url);
-        } catch (MalformedURLException e) {
+            sourceUrl = new URI(url).toURL();
+        } catch (Exception e) {
             // we would have known by now as previous components check whether
             // the URL is valid
-            LOG.error("MalformedURLException on {}", url);
+            LOG.error("Exception on {}", url, e);
             eventCounter.scope("error_invalid_source_url").incrBy(1);
             return new LinkedList<>();
         }

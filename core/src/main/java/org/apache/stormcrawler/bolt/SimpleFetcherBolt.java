@@ -23,6 +23,7 @@ import crawlercommons.domains.PaidLevelDomain;
 import crawlercommons.robots.BaseRobotRules;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -265,8 +266,8 @@ public class SimpleFetcherBolt extends StatusEmitterBolt {
         URL url;
 
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
+            url = new URI(urlString).toURL();
+        } catch (Exception e) {
             LOG.error("{} is a malformed URL", urlString);
             // Report to status stream and ack
             metadata.setValue(Constants.STATUS_ERROR_CAUSE, "malformed URL");

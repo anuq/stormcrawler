@@ -23,6 +23,8 @@ import crawlercommons.robots.BaseRobotRules;
 import crawlercommons.robots.SimpleRobotRules;
 import crawlercommons.robots.SimpleRobotRules.RobotRulesMode;
 import crawlercommons.robots.SimpleRobotRulesParser;
+
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -200,7 +202,7 @@ public abstract class RobotRulesParser {
     public BaseRobotRules getRobotRulesSet(Protocol protocol, String url) {
         URL u;
         try {
-            u = new URL(url);
+            u = new URI(url).toURL();
         } catch (Exception e) {
             return EMPTY_RULES;
         }

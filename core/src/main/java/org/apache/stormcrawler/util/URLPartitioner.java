@@ -20,6 +20,8 @@ package org.apache.stormcrawler.util;
 import crawlercommons.domains.PaidLevelDomain;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -58,9 +60,9 @@ public class URLPartitioner {
         if (partitionKey == null) {
             URL u;
             try {
-                u = new URL(url);
+                u = new URI(url).toURL();
                 host = u.getHost();
-            } catch (MalformedURLException e1) {
+            } catch (MalformedURLException | URISyntaxException e) {
                 LOG.warn("Invalid URL: {}", url);
                 return null;
             }

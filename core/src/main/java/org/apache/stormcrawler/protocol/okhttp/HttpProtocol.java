@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
@@ -271,11 +273,11 @@ public class HttpProtocol extends AbstractHttpProtocol {
             return;
         }
         try {
-            final List<Cookie> cookies = CookieConverter.getCookies(cookieStrings, new URL(url));
+            final List<Cookie> cookies = CookieConverter.getCookies(cookieStrings, new URI(url).toURL());
             for (Cookie c : cookies) {
                 rb.addHeader("Cookie", c.getName() + "=" + c.getValue());
             }
-        } catch (MalformedURLException e) { // Bad url , nothing to do
+        } catch (MalformedURLException | URISyntaxException e) { // Bad url , nothing to do
         }
     }
 

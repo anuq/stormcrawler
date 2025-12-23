@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -126,7 +128,7 @@ public class JSoupFilters extends AbstractConfigurable implements JSoupFilter, J
     }
 
     /** * Used for quick testing + debugging */
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException, URISyntaxException {
 
         Config conf = new Config();
 
@@ -154,7 +156,7 @@ public class JSoupFilters extends AbstractConfigurable implements JSoupFilter, J
 
         String url = cmd.getArgs()[0];
 
-        byte[] content = IOUtils.toByteArray((new URL(url)).openStream());
+        byte[] content = IOUtils.toByteArray((new URI(url).toURL()).openStream());
 
         Document doc = Jsoup.parse(new String(content, StandardCharsets.UTF_8), url);
 

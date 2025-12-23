@@ -25,6 +25,7 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import java.io.ByteArrayInputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -175,7 +176,7 @@ public class FeedParserBolt extends StatusEmitterBolt {
             feed = input.build(new InputSource(is));
         }
 
-        URL url1 = new URL(url);
+        URL url1 = new URI(url).toURL();
 
         List<SyndEntry> entries = feed.getEntries();
         for (SyndEntry entry : entries) {

@@ -21,6 +21,8 @@ import static org.apache.stormcrawler.Constants.StatusStreamName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,9 +206,9 @@ public class ParserBolt extends BaseRichBolt {
 
         // as well as the filename
         try {
-            URL _url = new URL(url);
+            URL _url = new URI(url).toURL();
             md.set(TikaCoreProperties.RESOURCE_NAME_KEY, _url.getFile());
-        } catch (MalformedURLException e1) {
+        } catch (MalformedURLException | URISyntaxException e1) {
             throw new IllegalStateException("Malformed URL", e1);
         }
 

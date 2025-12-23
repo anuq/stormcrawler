@@ -22,6 +22,7 @@ import crawlercommons.robots.BaseRobotRules;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.time.Instant;
@@ -529,7 +530,7 @@ public class FetcherBolt extends StatusEmitterBolt {
                 boolean asap = false;
 
                 try {
-                    URL url = new URL(fit.url);
+                    URL url = new URI(fit.url).toURL();
                     Protocol protocol = protocolFactory.getProtocol(url);
 
                     if (protocol == null) {
@@ -982,8 +983,8 @@ public class FetcherBolt extends StatusEmitterBolt {
         URL url;
 
         try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
+            url = new URI(urlString).toURL();
+        } catch (Exception e) {
             LOG.error("{} is a malformed URL", urlString);
 
             Metadata metadata = (Metadata) input.getValueByField("metadata");

@@ -19,6 +19,8 @@ package org.apache.stormcrawler.indexing;
 
 import crawlercommons.domains.PaidLevelDomain;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -286,7 +288,7 @@ public abstract class AbstractIndexerBolt extends BaseRichBolt {
         }
 
         try {
-            URL url1 = new URL(url);
+            URL url1 = new URI(url).toURL();
             URL canonical = URLUtil.resolveUrl(url1, canonicalValue);
 
             String domain = PaidLevelDomain.getPLD(url1.getHost());
@@ -298,7 +300,7 @@ public abstract class AbstractIndexerBolt extends BaseRichBolt {
             } else {
                 log.info("Canonical URL references a different domain, ignoring in {} ", url);
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             log.error("Malformed canonical URL {} was found in {} ", canonicalValue, url);
         }
 

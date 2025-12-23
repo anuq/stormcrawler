@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +186,7 @@ public class URLFilters extends URLFilter implements JSONResource {
                 for (URLFilter filter : filters.filters) {
                     long start = System.currentTimeMillis();
                     normalizedUrl =
-                            filter.filter(new URL(sourceUrl), new Metadata(), normalizedUrl);
+                            filter.filter(new URI(sourceUrl).toURL(), new Metadata(), normalizedUrl);
                     long end = System.currentTimeMillis();
                     System.out.println(
                             "\t["

@@ -31,6 +31,8 @@ import crawlercommons.sitemaps.UnknownFormatException;
 import crawlercommons.sitemaps.extension.Extension;
 import crawlercommons.sitemaps.extension.ExtensionMetadata;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -181,9 +183,9 @@ public class SiteMapParserBolt extends StatusEmitterBolt {
 
     private List<Outlink> parseSiteMap(
             String url, byte[] content, String contentType, Metadata parentMetadata)
-            throws UnknownFormatException, IOException {
+            throws UnknownFormatException, IOException, URISyntaxException {
 
-        URL url1 = new URL(url);
+        URL url1 = new URI(url).toURL();
         long start = System.currentTimeMillis();
         AbstractSiteMap siteMap;
         // let the parser guess what the mimetype is

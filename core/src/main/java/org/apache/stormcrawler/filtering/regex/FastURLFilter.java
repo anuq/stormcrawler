@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,7 +179,7 @@ public class FastURLFilter extends URLFilter implements JSONResource {
             if (rules.filter(urlToFilter, sourceMetadata)) {
                 return null;
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             return null;
         }
         return urlToFilter;
@@ -210,8 +212,8 @@ class Rules {
      *
      * @throws MalformedURLException
      */
-    public boolean filter(String url, Metadata metadata) throws MalformedURLException {
-        URL u = new URL(url);
+    public boolean filter(String url, Metadata metadata) throws MalformedURLException, URISyntaxException {
+        URL u = new URI(url).toURL();
 
         // first try the full hostname
         String hostname = u.getHost();

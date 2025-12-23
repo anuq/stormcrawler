@@ -20,6 +20,7 @@ package org.apache.stormcrawler.bolt;
 import crawlercommons.domains.PaidLevelDomain;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -82,9 +83,9 @@ public class URLPartitionerBolt extends BaseRichBolt {
         if (partitionKey == null) {
             URL u;
             try {
-                u = new URL(url);
+                u = new URI(url).toURL();
                 host = u.getHost();
-            } catch (MalformedURLException e1) {
+            } catch (Exception e1) {
                 eventCounter.scope("Invalid URL").incrBy(1);
                 LOG.warn("Invalid URL: {}", url);
                 // ack it so that it doesn't get replayed

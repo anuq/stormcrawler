@@ -20,6 +20,8 @@ package org.apache.stormcrawler.filtering.host;
 import com.fasterxml.jackson.databind.JsonNode;
 import crawlercommons.domains.PaidLevelDomain;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import org.apache.stormcrawler.Metadata;
@@ -82,8 +84,8 @@ public class HostURLFilter extends URLFilter {
 
         URL url;
         try {
-            url = new URL(urlToFilter);
-        } catch (MalformedURLException e1) {
+            url = new URI(urlToFilter).toURL();
+        } catch (MalformedURLException | URISyntaxException e1) {
             return null;
         }
 

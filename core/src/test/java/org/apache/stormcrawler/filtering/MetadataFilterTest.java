@@ -19,6 +19,8 @@ package org.apache.stormcrawler.filtering;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,18 +42,18 @@ class MetadataFilterTest {
 
     // old filter mechanism (backward compatible)
     @Test
-    void testFilterNoMD() throws MalformedURLException {
+    void testFilterNoMD() throws MalformedURLException, URISyntaxException  {
         URLFilter filter = createFilter("key", "val");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
         Assertions.assertEquals(url.toExternalForm(), filterResult);
     }
 
     @Test
-    void testFilterHit() throws MalformedURLException {
+    void testFilterHit() throws MalformedURLException, URISyntaxException  {
         URLFilter filter = createFilter("key", "val");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -59,9 +61,9 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testFilterNoHit() throws MalformedURLException {
+    void testFilterNoHit() throws MalformedURLException, URISyntaxException  {
         URLFilter filter = createFilter("key", "val");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val2");
         metadata.addValue("key", "val3");
@@ -71,26 +73,26 @@ class MetadataFilterTest {
 
     // new filter mechanism
     @Test
-    void testNewFilterWithEmptyFilterAndNullMetadata() throws MalformedURLException {
+    void testNewFilterWithEmptyFilterAndNullMetadata() throws MalformedURLException, URISyntaxException  {
         MetadataFilter filter = new MetadataFilter();
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         String filterResult = filter.filter(url, null, url.toExternalForm());
         Assertions.assertEquals(url.toExternalForm(), filterResult);
     }
 
     @Test
-    void testNewFilterWithEmptyFilterAndEmptyMetadata() throws MalformedURLException {
+    void testNewFilterWithEmptyFilterAndEmptyMetadata() throws MalformedURLException, URISyntaxException  {
         MetadataFilter filter = new MetadataFilter();
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
         Assertions.assertEquals(url.toExternalForm(), filterResult);
     }
 
     @Test
-    void testNewFilterWithEmptyFilter() throws MalformedURLException {
+    void testNewFilterWithEmptyFilter() throws MalformedURLException, URISyntaxException  {
         MetadataFilter filter = new MetadataFilter();
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -98,21 +100,21 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithEmptyMetadata() throws MalformedURLException {
+    void testNewFilterWithEmptyMetadata() throws MalformedURLException, URISyntaxException  {
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
         Assertions.assertEquals(url.toExternalForm(), filterResult);
     }
 
     @Test
-    void testNewFilterWithSingleMatchingORFilter() throws MalformedURLException {
+    void testNewFilterWithSingleMatchingORFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val match (OR operation)
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -120,12 +122,12 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithSingleMatchingANDFilter() throws MalformedURLException {
+    void testNewFilterWithSingleMatchingANDFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val match (AND operation)
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
         filter.setOperation(MetadataFilter.FilterOperation.AND);
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -133,12 +135,12 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithOnlyOneMatchingORFilter() throws MalformedURLException {
+    void testNewFilterWithOnlyOneMatchingORFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val OR key2=>val2 match
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
         filter.addFilter("key2", "val2");
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -146,13 +148,13 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithOnlyOneMatchingANDFilter() throws MalformedURLException {
+    void testNewFilterWithOnlyOneMatchingANDFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val AND key2=>val2 match
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
         filter.addFilter("key2", "val2");
         filter.setOperation(MetadataFilter.FilterOperation.AND);
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         String filterResult = filter.filter(url, metadata, url.toExternalForm());
@@ -160,13 +162,13 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithAllMatchingANDFilter() throws MalformedURLException {
+    void testNewFilterWithAllMatchingANDFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val AND key2=>val2 match
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
         filter.addFilter("key2", "val2");
         filter.setOperation(MetadataFilter.FilterOperation.AND);
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
         metadata.addValue("key2", "val2");
@@ -175,7 +177,7 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithComplexFilter() throws MalformedURLException {
+    void testNewFilterWithComplexFilter() throws MalformedURLException, URISyntaxException  {
         // Filter if key=>val AND (key2=>val2 OR key3=>val3) match
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
@@ -184,7 +186,7 @@ class MetadataFilterTest {
         filter2.addFilter("key2", "val2");
         filter2.addFilter("key3", "val3");
         filter.addFilter(filter2);
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
 
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
@@ -221,7 +223,7 @@ class MetadataFilterTest {
     }
 
     @Test
-    void testNewFilterWithOtherComplexFilter() throws MalformedURLException {
+    void testNewFilterWithOtherComplexFilter() throws MalformedURLException, URISyntaxException {
         // Filter if key=>val OR (key2=>val2 AND key3=>val3) match
         MetadataFilter filter = new MetadataFilter();
         filter.addFilter("key", "val");
@@ -230,7 +232,7 @@ class MetadataFilterTest {
         filter2.addFilter("key3", "val3");
         filter2.setOperation(MetadataFilter.FilterOperation.AND);
         filter.addFilter(filter2);
-        URL url = new URL("http://www.sourcedomain.com/");
+        URL url = new URI("http://www.sourcedomain.com/").toURL();
 
         Metadata metadata = new Metadata();
         metadata.addValue("key", "val");
